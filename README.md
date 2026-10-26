@@ -18,14 +18,13 @@
 
 本项目源自 [zee-rp](https://github.com/LilZeeCN/zee-rp)（MIT），在它的能力之上做了下面几处增补；未列出的行为与上游一致。
 
-| 改动 | 说明 |
+| 功能改动 | 说明 |
 | :--- | :--- |
-| 改名与打包 | 包名 / bin / MCP server 名统一为 `axure-rp-mcp`（`axure-rp-mcp` CLI、`axure-rp-mcp-server` MCP），版本 `0.2.2` |
 | **新增 `append-library-pages`** | 把 `.rp` 的页增量写进 `.rplib` 控件库：既有库页记录字节不动，默认只追加"库里没有的页名"，写完自检页数与页名；无新增不落盘 |
 | **新增 `hide-widgets`** | 按 `[{page?, name, x, y, w, h}]` 清单隐藏元件，写原生 `MyStyle VISIBLE=false`；先按「页 + 几何」再退化到「页 + 名字」匹配，未命中默认只报告（`--strict` 才失败） |
-| 修复 `merge-pages` 选页 | `file:页名` 以前只改名、实际复制源文件第一页（内容与页名不符且静默）；现在真正按页名选中，缺页抛 `[ERR_SOURCE_PAGE_NOT_FOUND]` 并列出可用页 |
-| 页面级开关 | RP/1 页面新增可选 `background` / `frame`（缺省 `true`，不写时行为不变）：`background:false` 不发射整页底板，`frame:false` 不发射 `frame-<名>` 包裹层 |
-| 文档与登记 | 新增 [README-MCP.md](README-MCP.md) 与 `mcp.example.json`；registry / 命令表 / SKILL / 变更记录同步；发布清单与基线指纹已重算 |
+| **新增页面级开关** | RP/1 页面可选 `background` / `frame`（缺省 `true`，不写时行为不变）：`background:false` 不发射整页底板，`frame:false` 不发射 `frame-<名>` 包裹层 |
+
+另修正一处既有行为：`merge-pages` 的 `file:页名` 现在真正按页名选中（旧实现只改名、会静默复制源文件第一页），缺页抛 `[ERR_SOURCE_PAGE_NOT_FOUND]` 并列出可用页。
 
 完整改动见 [CHANGELOG](CHANGELOG.md)。
 

@@ -18,14 +18,13 @@ Write the design in **RP/1**, generate it with **MCP / CLI**, keep editing it in
 
 This project starts from [zee-rp](https://github.com/LilZeeCN/zee-rp) (MIT). Everything not listed below behaves the same.
 
-| Change | What it does |
+| Functional change | What it does |
 | :--- | :--- |
-| Rename & packaging | Package / bins / MCP server name are `axure-rp-mcp` (CLI `axure-rp-mcp`, server `axure-rp-mcp-server`), version `0.2.2` |
 | **New `append-library-pages`** | Append pages from a `.rp` into a `.rplib` widget library: existing library pages keep their bytes, only pages missing by name are added, and the result is self-checked (page count + name resolution). No new pages → no output file |
 | **New `hide-widgets`** | Hide widgets from a `[{page?, name, x, y, w, h}]` list by writing the native `MyStyle VISIBLE=false`; matches by page + geometry first, then name. Unmatched targets are reported (`--strict` to fail) |
-| `merge-pages` page selection fix | `<file>:<page>` used to only rename and silently copy the first page; it now really selects that page and throws `[ERR_SOURCE_PAGE_NOT_FOUND]` with the available names |
-| Page-level flags | RP/1 pages accept optional `background` / `frame` (default `true`, unchanged when omitted): `background:false` drops the full-page background rect, `frame:false` drops the `frame-<name>` wrapper |
-| Docs & registry | Adds [README-MCP.md](README-MCP.md) + `mcp.example.json`; registry, command table, SKILL and release manifest updated |
+| **New page-level flags** | RP/1 pages accept optional `background` / `frame` (default `true`, unchanged when omitted): `background:false` drops the full-page background rect, `frame:false` drops the `frame-<name>` wrapper |
+
+One existing behavior was also fixed: `merge-pages` now really selects `<file>:<page>` (it used to only rename and silently copy the first page) and throws `[ERR_SOURCE_PAGE_NOT_FOUND]` with the available names when the page is missing.
 
 Full list: [CHANGELOG](CHANGELOG.md).
 
