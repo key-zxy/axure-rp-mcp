@@ -1,4 +1,4 @@
-# zee-rp · 简体中文
+# axure-rp-mcp · 简体中文
 
 中文版首页已移至 [README.md](README.md)，这里保留原有链接入口。
 

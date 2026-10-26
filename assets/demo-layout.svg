@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 640" role="img" aria-label="zee-rp public reference layout">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 640" role="img" aria-label="axure-rp-mcp public reference layout">
 <rect width="1080" height="640" fill="#F1F5F9"/>
 <rect x="0" y="0" width="230" height="640" rx="0" fill="#0F172A" stroke="none" stroke-width="1"/>
-<text x="28" y="65" font-family="Arial,sans-serif" font-size="30" font-weight="700" fill="#FFFFFF">zee-rp</text>
+<text x="28" y="65" font-family="Arial,sans-serif" font-size="30" font-weight="700" fill="#FFFFFF">axure-rp-mcp</text>
 <text x="28" y="94" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#94A3B8">PROTOTYPE TOOLKIT</text>
 <rect x="18" y="142" width="194" height="46" rx="8" fill="#2563EB" stroke="none" stroke-width="1"/>
 <text x="34" y="169" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">Overview</text>

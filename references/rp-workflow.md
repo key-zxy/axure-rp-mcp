@@ -396,3 +396,21 @@ set-adaptive-view view=base
 ## 2026-10-12 验收修复合同
 
 条件Case用`when`与`description`，按实际活动树核对Condition和Case顺序。普通`link`动作必须且只能提供`page`或`url`，窗口仅current/new；Page名解析自身包GUID。跨文档connector状态21迁移未支持，未登记来源样式明确拒绝。有限GC与最小VectorShape仅研究目录候选，不在canonical命令注册表提供通用接口；清理不压缩GUID/字符串。四件验证与重建入口见<local-path> (internal research reference)。
+
+## 写入 `.rplib` 控件库与隐藏元件（axure-rp-mcp 扩展）
+
+RP9 的 `.rplib` 与 `.rp` 是同一容器（`AC EF` 头 + LZ4 manifest + gzip 记录），库页可以像工程页一样追加：
+
+```bash
+# 缺省只追加"库里没有的页名"；--pages 显式挑页；同名页默认跳过（--fail-on-duplicate 改失败）
+node bin/axure.mjs append-library-pages Default.rplib components.rp AxureComponents.rplib --json
+node bin/axure.mjs hide-widgets in.rp out.rp targets.json --json
+```
+
+- `append-library-pages`：既有库页记录字节不动（只在 dd 追加 PackageInfo/Sitemap 节点），写完自检页数 = base + 追加、
+  每页都能解析回 Page 记录；无新增则不写输出文件。裸流 `.rplib`（无 manifest）只读。
+- `hide-widgets`：targets = `[{page?, name, x, y, w, h}]`，写原生 `MyStyle` 属性
+  `DOAName=0xC000006E / Value={tag:25,value:false}`；同名多实例先按「页 + 几何」再退化到「页 + 名字」匹配。
+  未命中 = 该元件不在文件里（没生成），默认报告，`--strict` 才失败。
+- 页面级开关（RP/1 page）：`background:false` 不发射整页背景矩形（`bg-frame-<名>`）；
+  `frame:false` 不发射 `frame-<名>` 包裹层（顶层元件直接进 `scene.items`）。缺省 `true`，不写时行为不变。

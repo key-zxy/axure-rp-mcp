@@ -144,30 +144,35 @@ function cloneOwnedStatesIntoTarget(out, newPageGuid, packages, identities) {
   return Buffer.concat([encodeManifest(out, manifest.value), out.subarray(manifest.dataStart)]);
 }
 
-function selectSourcePageRecord(srcRecords, sourcePageName = null) {
+// 页记录 ↔ 页名 的权威解析（dd 的 PackageInfo.package-id → guid 表 → Page 记录的 package guid）。
+// merge-pages 选页与 append-library-pages 的"库里已有页名"判断共用这一处。
+// 返回 [{ record, name }]，name 为 null 表示该 Page 记录在 dd 里找不到 PackageInfo。
+export function listSourcePages(srcRecords) {
   const pageRecs = srcRecords.filter(r => r.className === 'Axure:Page');
-  if (!pageRecs.length) throw new Error('Source .rp has no Axure:Page records');
-  if (!sourcePageName) return { pageRec: pageRecs[0], origName: 'Page 1' };
-
   const docRec = srcRecords.find(r => r.className === 'Axure:DesignDocument');
-  if (!docRec) return { pageRec: pageRecs[0], origName: sourcePageName };
+  if (!docRec) return pageRecs.map(record => ({ record, name: null }));
   const doc = parsePayload(docRec);
   const docGuids = doc.roots[0]?.values ?? [];
   const strings = docRec.strings;
   const infos = [...doc.objects.values()].filter(o => o.className === 'Axure:PackageInfo');
-
-  for (const pr of pageRecs) {
-    const pg = parsePayload(pr);
-    const pGuid = packageGuid(pg);
+  return pageRecs.map(record => {
+    const pGuid = packageGuid(parsePayload(record));
     const info = infos.find(
       inf => pagePackageName(inf, strings) && docGuids[field(inf.body, 'package-id')?.values?.[1] - 1] === pGuid
     );
-    const pName = info ? pagePackageName(info, strings) : null;
-    if (pName === sourcePageName) {
-      return { pageRec: pr, origName: pName };
-    }
-  }
-  return { pageRec: pageRecs[0], origName: sourcePageName };
+    return { record, name: info ? pagePackageName(info, strings) : null };
+  });
+}
+
+function selectSourcePageRecord(srcRecords, sourcePageName = null) {
+  const pages = listSourcePages(srcRecords);
+  if (!pages.length) throw new Error('Source .rp has no Axure:Page records');
+  if (!sourcePageName) return { pageRec: pages[0].record, origName: 'Page 1' };
+  const hit = pages.find(p => p.name === sourcePageName);
+  if (hit) return { pageRec: hit.record, origName: hit.name };
+  // 旧实现静默回退 pageRecs[0]：目标页拿到"第一页内容 + 新名字"，内容错得无声无息。缺页必须报错。
+  throw new Error(`[ERR_SOURCE_PAGE_NOT_FOUND] 源 .rp 中找不到页「${sourcePageName}」；可用页: `
+    + pages.map(p => (p.name ?? `#${p.record.index}`)).join(', '));
 }
 
 /**
@@ -309,7 +314,9 @@ if (isMain) {
       const arg = args[i];
       const colonIdx = arg.indexOf(':');
       if (colonIdx > 0) {
-        pageSpecs.push({ file: resolve(arg.slice(0, colonIdx)), name: arg.slice(colonIdx + 1) });
+        // `<file>:<页名>` = 选中该页（并保持页名）；旧实现只设 name（改名），实际复制源文件第一页。
+        const pageName = arg.slice(colonIdx + 1);
+        pageSpecs.push({ file: resolve(arg.slice(0, colonIdx)), name: pageName, sourcePageName: pageName });
       } else {
         pageSpecs.push({ file: resolve(arg) });
       }

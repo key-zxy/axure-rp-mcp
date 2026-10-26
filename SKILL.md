@@ -1,9 +1,9 @@
 ---
-name: zee-rp
+name: axure-rp-mcp
 description: Reconstruct screenshots as editable Axure layouts, compile RP/1 specifications into native prototypes, and inspect or edit RP9/RP11 files using CLI or MCP.
 ---
 
-# zee-rp（RP/1 零手算原型创作与原生编辑）
+# axure-rp-mcp（RP/1 零手算原型创作与原生编辑）
 
 已有全局自定义样式可用 `list_custom_styles` 查询、`rename_custom_style` 级联改名、`rebind_widgets` 批量绑定。全局定义先在 Axure UI 创建并保存，不直接注入新 `StyleSheet.CustomStyles`；详见 [样式工作流](references/custom-styles.md)。
 
@@ -109,6 +109,8 @@ page #detail name="打卡录入" device=iphone-17
 - **安全与证据原则**：切勿覆盖用户原始 `.rp`（可用 `AXURE_PROTECTED_PATHS` / `AXURE_WRITE_ROOT` 限制）；汇报时区分结构校验、Axure 打开、离线预览、GUI 编辑与保存重开。
 - **按需扩展文档（仅在对应特殊任务时读取）**：
   - 截图 1:1 转可编辑 `.rp`：`generate_from_image({image, output, scale, replace})` → [screenshot-workflow.md](references/screenshot-workflow.md)
+  - 写入 `.rplib` 控件库（增量追加页）：`append_library_pages({base, source, output, pages?})` → 既有库页字节不动，写完自检
+  - 按清单隐藏元件（原生 `VISIBLE=false`）：`hide_widgets({source, output, targets})` → 先按「页 + 几何」匹配，未命中默认只报告
   - 已有 `.rp` 检查/会话改名改字/三方同步：`verify` / `locate` / `inspect` / `edit_text` / `rename_widget` / `sync_prototype` → [mcp-prototype.md](references/mcp-prototype.md)
   - 浏览器真实预览点击校验与深度诊断：`diagnose_prototype` / `explain_binding` / `runtime_info` → [authoring-workflow.md](references/authoring-workflow.md)
   - 手机壳几何细节与最小示例 → [mobile-layout.md](references/mobile-layout.md)、[mobile-layout.rp1](examples/rp-language/mobile-layout.rp1)

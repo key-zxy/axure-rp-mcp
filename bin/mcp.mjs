@@ -8,7 +8,7 @@ try {
     import('@modelcontextprotocol/sdk/server/stdio.js'),
     import('@modelcontextprotocol/sdk/types.js')
   ]);
-  const server = new Server({ name: 'zee-rp', version: packageVersion }, { capabilities: { tools: {} } });
+  const server = new Server({ name: 'axure-rp-mcp', version: packageVersion }, { capabilities: { tools: {} } });
   const jobs = new JobManager();
   server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [...listMcpTools(), ...jobTools] }));
   server.setRequestHandler(CallToolRequestSchema, async request => {
@@ -37,6 +37,6 @@ try {
   for (const signal of ['SIGINT', 'SIGTERM']) process.once(signal, async () => { await jobs.close(); await server.close(); process.exit(0); });
   await server.connect(new StdioServerTransport());
 } catch (error) {
-  console.error(error.code === 'ERR_MODULE_NOT_FOUND' ? 'MCP 需要可选依赖：在 zee-rp 目录运行 npm ci --ignore-scripts。核心 CLI 无需安装依赖。' : error.message);
+  console.error(error.code === 'ERR_MODULE_NOT_FOUND' ? 'MCP 需要可选依赖：在 axure-rp-mcp 目录运行 npm ci --ignore-scripts。核心 CLI 无需安装依赖。' : error.message);
   process.exitCode = 1;
 }

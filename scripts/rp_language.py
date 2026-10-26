@@ -6151,7 +6151,10 @@ class Frontend:
         lowered["pages"] = []
         for i, page in enumerate(pages):
             pp = ptr("/pages", i)
-            fields(page, {"id", "slug", "name", "canvas", "domain", "device", "shell", "root", "on", "bindings", "views", "master", "masters", "slot", "tabBar"}, pp)
+            fields(page, {"id", "slug", "name", "canvas", "domain", "device", "shell", "root", "on", "bindings", "views", "master", "masters", "slot", "tabBar", "background", "frame"}, pp)
+            for flag in ("background", "frame"):
+                if flag in page:
+                    self.typecheck(page[flag], "boolean", ptr(pp, flag))
             if "slug" in page:
                 if "id" in page and page["id"] != page["slug"]:
                     fail("E_PAGE", ptr(pp, "slug"), "slug 与 id 冲突；只保留一个")
@@ -6172,6 +6175,7 @@ class Frontend:
         for i, page in enumerate(pages):
             pid, pp = page["id"], ptr("/pages", i)
             result = {"name": page["name"], "slug": pid, "canvas": page["canvas"],
+                      **({k: page[k] for k in ("background", "frame") if k in page}),
                       **({"domain": page["domain"]} if "domain" in page else ({"domain": self.spec["domain"]} if "domain" in self.spec else {})),
                       **({"device": page["device"]} if "device" in page else {}),
                       "root": self.node(page["root"], pid, {}, ptr(pp, "root")), "interactions": []}
@@ -7774,7 +7778,7 @@ def auto_heal_spec(spec, max_rounds=5):
                 try:
                     import tempfile
                     from proto import compile_spec_bundle
-                    with tempfile.TemporaryDirectory(prefix="zee-rp-heal-") as _td:
+                    with tempfile.TemporaryDirectory(prefix="axure-rp-mcp-heal-") as _td:
                         _bres = compile_spec_bundle(copy.deepcopy(cur_spec), _td, strict_audit=False)
                     if not _bres.get("structural_ok", True):
                         for _f in _bres.get("failures", []):
@@ -7863,7 +7867,7 @@ def auto_heal_spec(spec, max_rounds=5):
                         import tempfile
                         from proto import compile_spec_bundle
                         compile_language(copy.deepcopy(trial))
-                        with tempfile.TemporaryDirectory(prefix="zee-rp-cand-") as _ctd:
+                        with tempfile.TemporaryDirectory(prefix="axure-rp-mcp-cand-") as _ctd:
                             _cbres = compile_spec_bundle(copy.deepcopy(trial), _ctd, strict_audit=False)
                         if not _cbres.get("structural_ok", True):
                             continue

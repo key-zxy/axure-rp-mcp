@@ -18,7 +18,7 @@ const ASSET_BLANK = resolveBlankTemplate();
 const ASSET_SPEC = join(SKILL, 'assets', 'dashboard-example.spec.json');
 // 受保护路径经 AXURE_PROTECTED_PATHS 注入假路径（无需真实文件，引擎按词法/消解路径折叠比对）；
 // 本进程先写入 process.env，baseEnv 快照与全部子进程随之继承。
-const PROTECTED = '/zee-rp-test-protected/final.rp';
+const PROTECTED = '/axure-rp-mcp-test-protected/final.rp';
 process.env.AXURE_PROTECTED_PATHS = PROTECTED;
 const BASELINE = process.env.AXURE_BASELINE_SHAS || join(SKILL, 'test', 'baseline-shas.json');
 const EXPECTED_SCRIPT_COUNT = JSON.parse(readFileSync(join(SKILL, 'test', 'baseline-policy.json'), 'utf8')).expectedScriptCount;

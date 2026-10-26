@@ -260,6 +260,8 @@ npm run test:runtime
 
 ## AI 紧凑语法
 
+页面可选 `background` / `frame`（boolean，缺省 `true`）：`false` 时不发射整页背景矩形 / `frame-<名>` 包裹层；元件库与嵌入场景建议关掉。
+
 标准 AST 继续有效。节点可用 `{"button":"save","text":"保存"}` 代替 type/id；`row/column/grid/stack` 是带 layout 的 box 简写。模板 `${...}` 自动转换为文字表达式，`=expr` 用于纯行内表达式。数字显示由模板转换为文字，标准 AST 仍要求明确类型转换。
 
 | 名字 | 含义 |

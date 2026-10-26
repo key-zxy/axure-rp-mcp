@@ -37,7 +37,7 @@ const check = async (name, action) => {
   catch (error) { results.push({ name, passed: false, detail: error.message }); console.log(`FAIL  ${name} — ${error.message}`); }
 };
 const call = (name, args) => client.callTool({ name, arguments: args });
-const protectedPath = '/zee-rp-test-protected/final.rp';
+const protectedPath = '/axure-rp-mcp-test-protected/final.rp';
 env.AXURE_PROTECTED_PATHS = protectedPath;
 process.env.AXURE_PROTECTED_PATHS = protectedPath;
 

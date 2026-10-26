@@ -10,10 +10,10 @@ import { readRp } from '../scripts/rp-read.mjs';
 import { listMcpTools, jobTools } from '../scripts/mcp-tools.mjs';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const work = mkdtempSync(join(tmpdir(), 'zee-rp-stdio-'));
+const work = mkdtempSync(join(tmpdir(), 'axure-rp-mcp-stdio-'));
 const env = { ...process.env, AXURE_WRITE_ROOT: work, AXURE_PROTECTED_PATHS: join(work, 'protected.rp') };
 const transport = new StdioClientTransport({command:process.execPath,args:[join(root,'bin/mcp.mjs')],env,stderr:'pipe'});
-const client = new Client({name:'zee-rp-public-tests',version:'0.1.1'});
+const client = new Client({name:'axure-rp-mcp-public-tests',version:'0.1.1'});
 const results = [];
 async function check(name, action) {
   try { await action(); results.push({name,passed:true}); console.log(`PASS  ${name}`); }

@@ -10,7 +10,7 @@ import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const keep = process.env.AXURE_MCP_TEST_OUTPUT;
-const work = keep ? resolve(keep) : mkdtempSync(join(tmpdir(), 'zee-rp-generate-'));
+const work = keep ? resolve(keep) : mkdtempSync(join(tmpdir(), 'axure-rp-mcp-generate-'));
 if (keep) mkdirSync(work, { recursive: false });
 const spec = JSON.parse(readFileSync(join(root, 'examples/rp-language/mcp-three-pages.json')));
 const protectedPath = join(work, 'protected.rp');

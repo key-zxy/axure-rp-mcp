@@ -164,6 +164,22 @@ const COMMANDS = [
     "evidence": "gui-roundtrip"
   },
   {
+    "command": "append-library-pages",
+    "script": "append-library-pages.mjs",
+    "summary": "把 .rp 的页增量追加进 .rplib 控件库（RP9 库与 .rp 同容器；既有库页字节不动，默认只追加库里没有的页名）",
+    "usage": "node append-library-pages.mjs <base.rplib> <source.rp> <output.rplib> [--pages a,b,c] [--fail-on-duplicate] [--json]",
+    "output": "index:4",
+    "evidence": "loaded"
+  },
+  {
+    "command": "hide-widgets",
+    "script": "hide-widgets.mjs",
+    "summary": "按清单把元件设为隐藏（原生 MyStyle VISIBLE 属性 = false）",
+    "usage": "node hide-widgets.mjs <source.rp> <output.rp> <targets.json> [--json] [--strict]",
+    "output": "index:3",
+    "evidence": "structure"
+  },
+  {
     "command": "clone-library-page-content",
     "script": "clone-library-page-content.mjs",
     "summary": "把 .rplib 库页的全部内容闭包导入目标 .rp 页面",

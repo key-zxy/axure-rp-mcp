@@ -65,7 +65,7 @@ try {
   });
   await check('受保护路径及链接在读取前拒绝', async () => {
     // 经 AXURE_PROTECTED_PATHS 注入假路径；引擎惰性读取环境，调用前设置即生效。
-    const protectedPath = '/zee-rp-test-protected/final.rp';
+    const protectedPath = '/axure-rp-mcp-test-protected/final.rp';
     process.env.AXURE_PROTECTED_PATHS = protectedPath;
     await assert.rejects(manager.startRoundtrip({ source: protectedPath, output: join(work, 'never.rp') }), /受保护/);
     const link = join(work, 'link.rp'); symlinkSync(protectedPath, link);

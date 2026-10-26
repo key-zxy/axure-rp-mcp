@@ -1488,7 +1488,7 @@ function syncPrototype({
 
     const workParentDir = dirname(output ? resolve(output) : rpFile);
     mkdirSync(workParentDir, { recursive: true });
-    tmpDir = mkdtempSync(join(workParentDir, '.zee-rp-sync-'));
+    tmpDir = mkdtempSync(join(workParentDir, '.axure-rp-mcp-sync-'));
     let sourceInputFile = source ? resolve(source) : null;
     if (inlineSpec) {
       sourceInputFile = join(tmpDir, 'inline-source.json');

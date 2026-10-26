@@ -109,7 +109,7 @@ export function runtimeInfo(toolList) {
     .filter(path => loadedFiles[path] !== disk[path]);
   const compilerKeys = ['scripts/rp_language.py', 'scripts/rp_dsl.py', 'scripts/proto.py', 'scripts/rp_workflow.py', 'scripts/mcp-tools.mjs', 'scripts/authoring-workflow.mjs'];
   const compilerHashes = Object.fromEntries(compilerKeys.filter(k => disk[k] || loadedFiles[k]).map(k => [k, { loaded: loadedFiles[k] ?? null, disk: disk[k] ?? null }]));
-  return { status: 'completed', name: 'zee-rp', version: packageVersion, root: ROOT, pid: process.pid, startedAt,
+  return { status: 'completed', name: 'axure-rp-mcp', version: packageVersion, root: ROOT, pid: process.pid, startedAt,
     fingerprint: loadedFingerprint, diskFingerprint: digest(JSON.stringify(disk)),
     trackedFileCount: Object.keys(disk).length, compilerHashes,
     restartRequired: changedFiles.length > 0, changedFiles,

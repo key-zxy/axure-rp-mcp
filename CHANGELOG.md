@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+本项目源自 [zee-rp](https://github.com/LilZeeCN/zee-rp)（MIT，见 LICENSE），在此基础上包含以下改动：
+
+- **新增 `append-library-pages`**：把 `.rp` 的页增量追加进 `.rplib` 控件库（RP9 库与 .rp 同容器）。
+  既有库页记录字节不动，默认只追加"库里没有的页名"，写完自检页数与页名可解析；无新增则不写文件。
+- **新增 `hide-widgets`**：按 `[{page?, name, x, y, w, h}]` 清单把元件设为隐藏，写原生
+  `MyStyle` 属性 `DOAName=0xC000006E / Value=false`（Axure 自带库的隐藏面板即此形态，可见元件没有该条目）；
+  匹配先按「页 + 几何」再退化到「页 + 名字」，未命中默认只报告，`--strict` 才失败。
+- **修复 `merge-pages` 的 `file:页名` 语义**：旧实现只改名、实际复制源文件第一页（内容与页名不符且静默）；
+  现在真正按页名选中，缺页抛 `[ERR_SOURCE_PAGE_NOT_FOUND]` 并列出可用页。导出 `listSourcePages()` 供复用。
+- **RP/1 页面新增 `background` / `frame` 开关**（boolean，缺省 `true`，不写时行为不变）：
+  `background:false` 不发射整页背景矩形（`bg-frame-<名>`）；`frame:false` 不发射 `frame-<名>` 包裹层，
+  顶层元件直接进 `scene.items`（元件库/嵌入场景用）。
+- 版本号 0.2.2；包名/bin/MCP server 名同步为 `axure-rp-mcp`。
+
+## Unreleased
+
 - 修复 `image.radius/opacity` 在原生与离线预览中被忽略；现代机壳增加局部透明角部遮罩，覆盖前景内容超出内屏圆角的像素。
 - 单 label 的双向居中容器继承文字水平居中，保留显式对齐；tab-bar 新增 `activeVariant/activeIndicator/justify/itemFlex`，接通已有激活/非激活颜色与填充设置。
 - 状态拼图显示面板视口与内容高度；新增视觉创作指南、导航范例与定向回归，复验试用反馈。

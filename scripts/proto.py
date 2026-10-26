@@ -2734,7 +2734,7 @@ def _render_sparkline(points, w, h, color_hex, fill_hex=None, stroke_w=2.0, smoo
     return _encode_pil_png(img.resize((w * 2, h * 2), Image.Resampling.LANCZOS))
 
 
-def emit_tree_to_axvg(root_node, theme_dict, include_dynamic_panel_placeholders=False, base_dir=None, canvas_background=True):
+def emit_tree_to_axvg(root_node, theme_dict, include_dynamic_panel_placeholders=False, base_dir=None, canvas_background=True, wrap_frame=True):
     """递归遍历已完成自动布局的节点树，生成带原生编组 (itemType: 0) 的 Axvg items 与扁平 spec children。"""
     id_counter = [1]
     active_when_ctx = [()]
@@ -3254,30 +3254,37 @@ def emit_tree_to_axvg(root_node, theme_dict, include_dynamic_panel_placeholders=
             if isinstance(ch, dict) and ch.get("_phone_shell_opts"):
                 shell_opts = ch.get("_phone_shell_opts")
                 break
+    # wrap_frame=False：不发射 frame 包裹层，顶层元件直接进 scene.items（元件库/嵌入场景不需要多余父层）；
+    # 有手机壳（shell_opts）时必须保留 frame，壳的合成依赖它。
+    wrap_frame = bool(wrap_frame) and not shell_opts
+    background_shape = make_axvg_vector_shape("bg-1", f"bg-frame-{frame_name}", 0, 0, root_node["_w"], root_node["_h"], fill_hex=bg_hex) if canvas_background else None
+    if wrap_frame:
+        scene_items = [{
+            "id": "frame-1",
+            "name": f"frame-{frame_name}",
+            "itemType": 2,
+            "isNameDynamic": False,
+            "rect": {"location": {"x": 0, "y": 0}, "size": {"width": root_node["_w"], "height": root_node["_h"]}},
+            "resizingConstraints": {
+                "hasFixedLeft": True,
+                "hasFixedRight": False,
+                "hasFixedTop": True,
+                "hasFixedBottom": False,
+                "hasFixedWidth": True,
+                "hasFixedHeight": True,
+            },
+            "backgroundFill": {"type": 1, "enabled": True, "color": bg_color_obj},
+            "backgroundShape": background_shape,
+            "scene": {"items": items_list},
+        }]
+    else:
+        scene_items = ([background_shape] if background_shape else []) + list(items_list)
+
     axvg_doc = {
         "masters": {},
         "imageMap": image_map,
         "scene": {
-            "items": [
-                {
-                    "id": "frame-1",
-                    "name": f"frame-{frame_name}",
-                    "itemType": 2,
-                    "isNameDynamic": False,
-                    "rect": {"location": {"x": 0, "y": 0}, "size": {"width": root_node["_w"], "height": root_node["_h"]}},
-                    "resizingConstraints": {
-                        "hasFixedLeft": True,
-                        "hasFixedRight": False,
-                        "hasFixedTop": True,
-                        "hasFixedBottom": False,
-                        "hasFixedWidth": True,
-                        "hasFixedHeight": True,
-                    },
-                    "backgroundFill": {"type": 1, "enabled": True, "color": bg_color_obj},
-                    "backgroundShape": make_axvg_vector_shape("bg-1", f"bg-frame-{frame_name}", 0, 0, root_node["_w"], root_node["_h"], fill_hex=bg_hex) if canvas_background else None,
-                    "scene": {"items": items_list},
-                }
-            ]
+            "items": scene_items,
         },
     }
     spec_doc = {
@@ -7194,7 +7201,11 @@ def _compile_spec_bundle(spec_data, out_dir, theme_override=None, base_dir=None,
         ensure_unique_names(root_main, scope_prefix=p_slug)
         measure_node(root_main, base_dir=base_dir, available_w=cw)
         layout_node(root_main, 0, 0, cw, ch)
-        em_main = emit_tree_to_axvg(root_main, theme_dict, include_dynamic_panel_placeholders=False, base_dir=base_dir)
+        # 页面级开关：background=false 不发射整页背景矩形；frame=false 不发射 frame 包裹层。
+        canvas_background = p_spec.get("background", True) is not False
+        wrap_frame = p_spec.get("frame", True) is not False
+        em_main = emit_tree_to_axvg(root_main, theme_dict, include_dynamic_panel_placeholders=False,
+                                    base_dir=base_dir, canvas_background=canvas_background, wrap_frame=wrap_frame)
         if dev_shell:
             em_main = compose_device_shell(em_main, p_slug, shell_name=dev_shell)
 
@@ -7202,7 +7213,8 @@ def _compile_spec_bundle(spec_data, out_dir, theme_override=None, base_dir=None,
         ensure_unique_names(root_prev, scope_prefix=p_slug)
         measure_node(root_prev, base_dir=base_dir, available_w=cw)
         layout_node(root_prev, 0, 0, cw, ch)
-        em_prev = emit_tree_to_axvg(root_prev, theme_dict, include_dynamic_panel_placeholders=True, base_dir=base_dir)
+        em_prev = emit_tree_to_axvg(root_prev, theme_dict, include_dynamic_panel_placeholders=True,
+                                    base_dir=base_dir, canvas_background=canvas_background, wrap_frame=wrap_frame)
         if dev_shell:
             em_prev = compose_device_shell(em_prev, p_slug, shell_name=dev_shell)
 

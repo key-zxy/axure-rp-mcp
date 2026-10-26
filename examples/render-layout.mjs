@@ -5,7 +5,7 @@ import { assertWritable } from '../scripts/engine.mjs';
 const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 export function renderLayout(spec) {
   const frame = spec.frames[0];
-  const parts = [`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${frame.w} ${frame.h}" role="img" aria-label="zee-rp public reference layout">`,
+  const parts = [`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${frame.w} ${frame.h}" role="img" aria-label="axure-rp-mcp public reference layout">`,
     `<rect width="${frame.w}" height="${frame.h}" fill="${escape(frame.bg)}"/>`];
   for (const child of frame.children) {
     if (child.kind === 'rect') parts.push(`<rect x="${child.x}" y="${child.y}" width="${child.w}" height="${child.h}" rx="${child.corners ?? 0}" fill="${escape(child.fill ?? 'none')}" stroke="${escape(child.border?.color ?? 'none')}" stroke-width="${child.border?.thickness ?? 1}"/>`);

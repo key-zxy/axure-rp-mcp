@@ -1,6 +1,8 @@
+> **来源**：本项目源自 [zee-rp](https://github.com/LilZeeCN/zee-rp)（MIT，见 LICENSE），新增 `.rplib` 增量写入、`hide-widgets`、`merge-pages` 选页修复与页面级 `background`/`frame` 开关（见 CHANGELOG）。只要 MCP 接入步骤看 [README-MCP.md](README-MCP.md)。
+
 <div align="center">
 
-<img src="assets/readme/hero.svg" alt="zee-rp — Describe. Compile. Keep editing." width="100%">
+<img src="assets/readme/hero.svg" alt="axure-rp-mcp — Describe. Compile. Keep editing." width="100%">
 
 <h1>让 AI 画出原型，<br>在 Axure 里继续改。</h1>
 
@@ -8,8 +10,6 @@
 用 **RP/1** 写设计，用 **MCP / CLI** 生成，打开 **Axure** 接着改。
 
 [![MIT](https://img.shields.io/badge/license-MIT-142033?style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/github/v/release/LilZeeCN/zee-rp?style=flat-square&color=304FFE)](https://github.com/LilZeeCN/zee-rp/releases)
-[![Checks](https://img.shields.io/github/actions/workflow/status/LilZeeCN/zee-rp/test.yml?style=flat-square&label=checks)](https://github.com/LilZeeCN/zee-rp/actions)
 
 [看原型](#先看一个完整的-app) · [开始使用](#把它接到你的-agent) · [理解 RP/1](#设计有源码就能接着生长) · [能力与边界](#交付到哪一步就验证到哪一步) · [English](README.en.md)
 
@@ -36,11 +36,11 @@
 
 https://github.com/user-attachments/assets/39c37462-3956-48b8-b495-fe90d2ab9431
 
-以「知序」考研复习 App 展示需求、页面和可编辑原型之间的关系。影片依据原型规格制作，属于流程动画。[下载 1080p / 60fps 视频](https://github.com/LilZeeCN/zee-rp/releases/download/v0.2.1/zee-rp-zhixu-1080p60.mp4) · [制作说明](assets/promo/README.md)。
+以「知序」考研复习 App 展示需求、页面和可编辑原型之间的关系。影片依据原型规格制作，属于流程动画。[下载 1080p / 60fps 视频](https://github.com/LilZeeCN/zee-rp/releases/download/v0.2.1/axure-rp-mcp-zhixu-1080p60.mp4) · [制作说明](assets/promo/README.md)。
 
 ## 设计有源码，就能接着生长
 
-zee-rp 的核心是一份叫 **RP/1** 的原型源码。页面、布局、数据与事件写在一起，生成后仍然能回到源码改稿，也能在 Axure 里调整。
+axure-rp-mcp 的核心是一份叫 **RP/1** 的原型源码。页面、布局、数据与事件写在一起，生成后仍然能回到源码改稿，也能在 Axure 里调整。
 
 ```text
 rp/1 target=9 name="下一次相遇" domain=mobile theme=mobile-hifi
@@ -66,7 +66,7 @@ page #notes name="手记" device=iphone-17-pro
 
 生成结果同时包含 `.rp`、源码基线、全页预览、状态拼图与检查报告。`[fillxhug]` 表示宽度铺满、高度按内容测量。[RP/1 手册](references/rp-language.md) · [完整示例](examples/authoring/mobile-cards.rp1) · [MCP 用法](references/mcp-prototype.md)。
 
-| 你想做的事 | zee-rp 的做法 |
+| 你想做的事 | axure-rp-mcp 的做法 |
 | :--- | :--- |
 | 从需求搭出多页原型 | 共享主题、组件、变量和跨页跳转，直接生成原生 `.rp` |
 | 从截图开始重建 | OCR、形状与布局检测；文字和支持的几何成为原生元件，照片保留为独立图片 |
@@ -85,8 +85,8 @@ page #notes name="手记" device=iphone-17-pro
 本机需要 **Node.js 18+、Python 3.10+**；生成原生工程还需要 **Axure** 和自己保存的 **RP9 单页空白工程**。截图 OCR 使用 macOS Vision 与 Swift。
 
 ```sh
-git clone https://github.com/LilZeeCN/zee-rp.git
-cd zee-rp
+git clone https://github.com/LilZeeCN/zee-rp
+cd axure-rp-mcp
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
@@ -98,11 +98,11 @@ npm ci
 ```json
 {
   "mcpServers": {
-    "zee-rp": {
+    "axure-rp-mcp": {
       "command": "node",
-      "args": ["/absolute/path/zee-rp/bin/mcp.mjs"],
+      "args": ["/absolute/path/axure-rp-mcp/bin/mcp.mjs"],
       "env": {
-        "PATH": "/absolute/path/zee-rp/.venv/bin:/usr/local/bin:/usr/bin:/bin",
+        "PATH": "/absolute/path/axure-rp-mcp/.venv/bin:/usr/local/bin:/usr/bin:/bin",
         "AXURE_BLANK_TEMPLATE_RP9": "/absolute/path/my-rp9-blank.rp"
       }
     }
@@ -132,7 +132,7 @@ node bin/axure.mjs rp-read outputs/counter/counter.rp --json
 
 ## 交付到哪一步，就验证到哪一步
 
-一个 `.rp` 能被解析、能在 Axure 打开、能在浏览器点击、能保存后重开，是四件分别需要证据的事。zee-rp 会保留相应检查结果；`strictAudit` 的通过只说明本次编译的布局与样式门禁通过。
+一个 `.rp` 能被解析、能在 Axure 打开、能在浏览器点击、能保存后重开，是四件分别需要证据的事。axure-rp-mcp 会保留相应检查结果；`strictAudit` 的通过只说明本次编译的布局与样式门禁通过。
 
 当前原生生成目标为 **RP9**；RP9 / RP11 的读写工具按版本处理。近期宿主行为证据来自特定 **macOS + Axure RP9** 样本。[完整能力范围](references/capabilities.md) · [验证记录](docs/verification.md)。
 

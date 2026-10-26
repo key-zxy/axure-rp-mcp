@@ -1,6 +1,8 @@
+> **来源**：本项目源自 [zee-rp](https://github.com/LilZeeCN/zee-rp)（MIT，见 LICENSE），新增 `.rplib` 增量写入、`hide-widgets`、`merge-pages` 选页修复与页面级 `background`/`frame` 开关（见 CHANGELOG）。只要 MCP 接入步骤看 [README-MCP.md](README-MCP.md)。
+
 <div align="center">
 
-<img src="assets/readme/hero.svg" alt="zee-rp — Describe. Compile. Keep editing." width="100%">
+<img src="assets/readme/hero.svg" alt="axure-rp-mcp — Describe. Compile. Keep editing." width="100%">
 
 # Let AI build a prototype you can keep editing in Axure.
 
@@ -8,8 +10,6 @@ From a brief or screenshot to a native **`.rp`** with pages, variables and inter
 Author in **RP/1**, generate through **MCP / CLI**, continue in **Axure**.
 
 [![MIT](https://img.shields.io/badge/license-MIT-142033?style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/github/v/release/LilZeeCN/zee-rp?style=flat-square&color=304FFE)](https://github.com/LilZeeCN/zee-rp/releases)
-[![Checks](https://img.shields.io/github/actions/workflow/status/LilZeeCN/zee-rp/test.yml?style=flat-square&label=checks)](https://github.com/LilZeeCN/zee-rp/actions)
 
 [See a prototype](#a-complete-app-first) · [Get started](#connect-your-agent) · [RP/1](#a-design-with-source-code) · [Scope](#verify-each-step-of-the-delivery) · [简体中文](README.md)
 
@@ -36,7 +36,7 @@ Text, cards, buttons, inputs and the schematic map are separate objects. Photos 
 
 https://github.com/user-attachments/assets/39c37462-3956-48b8-b495-fe90d2ab9431
 
-The Zhixu study app illustrates the path from a brief to an editable prototype. The film is a workflow animation based on the case specification. [Download 1080p / 60fps](https://github.com/LilZeeCN/zee-rp/releases/download/v0.2.1/zee-rp-zhixu-1080p60.mp4) · [Production notes](assets/promo/README.md).
+The Zhixu study app illustrates the path from a brief to an editable prototype. The film is a workflow animation based on the case specification. [Download 1080p / 60fps](https://github.com/LilZeeCN/zee-rp/releases/download/v0.2.1/axure-rp-mcp-zhixu-1080p60.mp4) · [Production notes](assets/promo/README.md).
 
 ## A design with source code
 
@@ -66,7 +66,7 @@ Save as `birding.rp1`, then call MCP `generate_prototype`:
 
 The output includes the native file, source baseline, page previews, state sheets and verification reports. `[fillxhug]` fills the available width and measures height from content. [Language guide](references/rp-language.md) · [Examples](examples/authoring/mobile-cards.rp1) · [MCP guide](references/mcp-prototype.md).
 
-| Your task | What zee-rp provides |
+| Your task | What axure-rp-mcp provides |
 | :--- | :--- |
 | Start with a brief | Native pages, shared styling, variables and cross-page navigation |
 | Reconstruct a screenshot | OCR and layout detection; supported text/geometry as native objects, photos as separate images |
@@ -85,8 +85,8 @@ Reconstruction produces an editable layout and comparison images. Business logic
 Install **Node.js 18+** and **Python 3.10+**. Native generation also requires your local **Axure** installation and a **single-page blank project saved in RP9**. Screenshot OCR uses macOS Vision and Swift.
 
 ```sh
-git clone https://github.com/LilZeeCN/zee-rp.git
-cd zee-rp
+git clone https://github.com/LilZeeCN/zee-rp
+cd axure-rp-mcp
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
@@ -98,11 +98,11 @@ Add this service to your MCP client and replace the three paths:
 ```json
 {
   "mcpServers": {
-    "zee-rp": {
+    "axure-rp-mcp": {
       "command": "node",
-      "args": ["/absolute/path/zee-rp/bin/mcp.mjs"],
+      "args": ["/absolute/path/axure-rp-mcp/bin/mcp.mjs"],
       "env": {
-        "PATH": "/absolute/path/zee-rp/.venv/bin:/usr/local/bin:/usr/bin:/bin",
+        "PATH": "/absolute/path/axure-rp-mcp/.venv/bin:/usr/local/bin:/usr/bin:/bin",
         "AXURE_BLANK_TEMPLATE_RP9": "/absolute/path/my-rp9-blank.rp"
       }
     }

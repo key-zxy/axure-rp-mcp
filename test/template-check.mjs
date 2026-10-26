@@ -21,7 +21,7 @@ const check = (name, action) => {
   catch (error) { results.push({ name, passed: false, detail: error.message }); console.log(`FAIL  ${name} — ${error.message}`); }
 };
 const run = (command, args, path) => spawnSync(process.execPath, [join(skill, 'bin/axure.mjs'), command, ...args], {
-  encoding: 'utf8', env: { ...process.env, AXURE_WRITE_ROOT: work, AXURE_BLANK_TEMPLATE: path, AXURE_PROTECTED_PATH: process.env.AXURE_PROTECTED_PATH || '/zee-rp-test-protected/final.rp' }
+  encoding: 'utf8', env: { ...process.env, AXURE_WRITE_ROOT: work, AXURE_BLANK_TEMPLATE: path, AXURE_PROTECTED_PATH: process.env.AXURE_PROTECTED_PATH || '/axure-rp-mcp-test-protected/final.rp' }
 });
 try {
   check('显式本机模板产物逐字节一致', () => {
@@ -41,7 +41,7 @@ try {
   });
   check('模板变量不能指向受保护成品', () => {
     const out = join(work, 'protected.rp');
-    const r = run('create-blank-project', [out], '/zee-rp-test-protected/final.rp');
+    const r = run('create-blank-project', [out], '/axure-rp-mcp-test-protected/final.rp');
     assert.notEqual(r.status, 0); assert.ok(r.stderr.includes('受保护')); assert.ok(!existsSync(out));
   });
   check('端到端流水线: 创建工程 -> 加空页 -> 克隆组件 -> 改名 -> 加变量与条件交互 -> 语义闭环通过', () => {

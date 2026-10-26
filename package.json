@@ -1,12 +1,12 @@
 {
-  "name": "zee-rp",
-  "version": "0.2.1",
+  "name": "axure-rp-mcp",
+  "version": "0.2.2",
   "private": false,
   "type": "module",
   "description": "Screenshot reconstruction, RP/1 compilation, and native Axure RP tooling",
   "bin": {
-    "zee-rp": "./bin/axure.mjs",
-    "zee-rp-mcp": "./bin/mcp.mjs"
+    "axure-rp-mcp": "./bin/axure.mjs",
+    "axure-rp-mcp-server": "./bin/mcp.mjs"
   },
   "license": "MIT",
   "engines": {
@@ -302,7 +302,7 @@
     "test/custom-styles-check.mjs",
     "references/custom-styles.md",
     "assets/promo/README.md",
-    "assets/promo/zee-rp-zhixu-cover.png",
+    "assets/promo/axure-rp-mcp-zhixu-cover.png",
     "docs/release-checks-v0.2.1.json",
     "test/visual-polish-check.py",
     "README.en.md",
@@ -317,6 +317,6 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/LilZeeCN/zee-rp.git"
+    "url": "https://github.com/LilZeeCN/zee-rp"
   }
 }

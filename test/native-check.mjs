@@ -14,7 +14,7 @@ import { setWidgetRichText } from '../scripts/set-widget-richtext.mjs';
 import { callCommandTool } from '../scripts/mcp-tools.mjs';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const work = mkdtempSync(join(tmpdir(), 'zee-rp-native-'));
+const work = mkdtempSync(join(tmpdir(), 'axure-rp-mcp-native-'));
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const results = [];
 function check(name, action) {

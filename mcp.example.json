@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "axure-rp-mcp": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/absolute/path/to/axure-rp-mcp/bin/mcp.mjs"],
+      "env": {
+        "AXURE_APP_RP9": "C:/Program Files (x86)/Axure/Axure RP 9"
+      }
+    }
+  }
+}

@@ -15,7 +15,7 @@ import { packRelease, releasePaths } from '../scripts/pack-release.mjs';
 import { renderLayout } from '../examples/render-layout.mjs';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const work = mkdtempSync(join(tmpdir(), 'zee-rp-core-'));
+const work = mkdtempSync(join(tmpdir(), 'axure-rp-mcp-core-'));
 const results = [];
 function check(name, action) {
   try { action(); results.push({ name, passed: true }); console.log(`PASS  ${name}`); }
@@ -101,7 +101,7 @@ try {
   check('path guard rejects writes outside the allowed directory', () => {
     process.env.AXURE_WRITE_ROOT = work;
     assertWritable(join(work, 'allowed.json'));
-    assert.throws(() => assertWritable(join(tmpdir(), 'zee-rp-outside.json')), /AXURE_WRITE_ROOT/);
+    assert.throws(() => assertWritable(join(tmpdir(), 'axure-rp-mcp-outside.json')), /AXURE_WRITE_ROOT/);
     delete process.env.AXURE_WRITE_ROOT;
   });
   check('release selection excludes native files, symlinks, and fixture payloads', () => {

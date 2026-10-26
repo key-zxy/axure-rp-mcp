@@ -5,7 +5,7 @@
       "y": 0,
       "w": 1080,
       "h": 640,
-      "name": "zee-rp reference",
+      "name": "axure-rp-mcp reference",
       "bg": "#F1F5F9",
       "children": [
         {
@@ -23,7 +23,7 @@
           "y": 35,
           "w": 180,
           "h": 40,
-          "content": "zee-rp",
+          "content": "axure-rp-mcp",
           "size": 30,
           "color": "#FFFFFF",
           "weight": 700
