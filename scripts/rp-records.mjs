@@ -125,6 +125,27 @@ export function readRecords(file) {
   return records;
 }
 
+// 容器类型：'manifest'（.rp 与 RP9 .rplib —— AC EF 头 + LZ4 manifest）/ 'bare'（老式无 manifest 记录流）/ 'invalid'。
+// 读两种都支持；写只支持 manifest 容器（replaceRecord/insertRecord 依赖 parts 表）。
+export function containerKind(file) {
+  if (!Buffer.isBuffer(file) || file.length < 16) return 'invalid';
+  if (file[0] === 0xac && file[1] === 0xef) return 'manifest';
+  // 裸流：[4B 压缩长度][gzip 魔数 1f 8b 08] 从偏移 0 开始。
+  if (file.length > 12 && file.readUInt32LE(0) > 18 && file[4] === 0x1f && file[5] === 0x8b && file[6] === 0x08) return 'bare';
+  return 'invalid';
+}
+
+// 写入前统一守卫：bare 容器给明确中文错误（而不是 readManifest 的英文解析异常）。
+export function requireWritableContainer(file, label = 'file') {
+  const kind = containerKind(file);
+  if (kind === 'manifest') return kind;
+  if (kind === 'bare') {
+    throw new Error(`${label} 是无 manifest 的裸流 .rplib（老变体）：只支持读取，不支持写入；`
+      + '请用 Axure 另存为 RP9 工程或库后再改。');
+  }
+  throw new Error(`${label} 不是 Axure .rp / .rplib 容器`);
+}
+
 export function encodeRecord(record, strings, payload = record.raw.subarray(record.payloadStart)) {
   const header = Buffer.from(record.raw.subarray(0, 32));
   header.writeUInt32LE(strings.length, 28);
@@ -138,6 +159,7 @@ export function encodeRecord(record, strings, payload = record.raw.subarray(reco
 
 // 替换已存在的记录，调整 manifest 中后续 parts 的相对位置；其他记录原样保留。
 export function replaceRecord(file, record, raw) {
+  requireWritableContainer(file);
   const compressed = gzipSync(raw), length = Buffer.alloc(4);
   length.writeUInt32LE(compressed.length);
   const manifest = readManifest(file);
@@ -167,6 +189,7 @@ export function replaceRecord(file, record, raw) {
 // dataStart 的变化量正好抵消，所以旧条目只需 +D（与 replaceRecord 同一套数学）。
 // beforeRecord 只要带 .offset（gzip 魔数的绝对偏移）；前缀 8B 从其 offset-8 起算。
 export function insertRecord(file, key, raw, beforeRecord) {
+  requireWritableContainer(file);
   const manifest = readManifest(file);
   if (manifest.value.root.children?.[key]) throw new Error(`Package already exists: ${key}`);
   const compressed = gzipSync(raw), prefix = Buffer.alloc(8);

@@ -45,6 +45,20 @@ Windows 路径用双反斜杠或正斜杠；`env` 可省略（默认即上面的
 | `clone_library_widget` / `clone_library_page_content` | 从 `.rplib` 把库页/控件闭包导入 `.rp` |
 | `proto_*` / `generate_from_image` | RP/1 spec / 截图 → 原生 `.rp`（需 Python + 本机 Axure 模板） |
 
+## 3.1 容器一致性（`.rp` / `.rplib`）
+
+RP9 的 `.rplib` 与 `.rp` 是同一容器；记录/元件级写入与**页级 CRUD**对两者都成立：
+
+| 能力 | `.rp` | `.rplib` |
+|---|---|---|
+| 解析、样式读写、元件级改写（改字/改名/富文本/交互/控件/表格/连接线/面板内容） | ✅ | ✅ |
+| 页 CRUD：`create-blank-page` / `duplicate-page` / `append-pages` / `remove-page` / `create-blank-library` | ✅ | ✅ |
+| 库专属：`append-library-pages` / `hide-widgets` / `clone-library-*` | —（hide 通用） | ✅ |
+| 工程专属：`create-blank-project` / 母版 / 自适应 / `proto` 生成 | ✅ | ❌（用法只声明 `.rp`） |
+| 裸流 `.rplib`（无 manifest 老变体） | — | ⚠️ 只读（写入会明确报错） |
+
+`AXURE_LIBRARY_SEED=/path/to/library.rplib npm run test:parity` 可跑真实库的页 CRUD 检查（默认跳过）。
+
 ## 4. 命令行等价入口
 
 ```bash

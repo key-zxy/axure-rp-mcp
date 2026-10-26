@@ -126,10 +126,11 @@ export function createBlankPage(file, newName) {
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const [inputPath, outputPath, newName] = process.argv.slice(2);
   if (!inputPath || !outputPath || !newName) {
-    console.error('Usage: node create-blank-page.mjs <input.rp> <output.rp> <newPageName>');
+    console.error('Usage: node create-blank-page.mjs <input.rp|rplib> <output.rp|rplib> <newPageName>');
     process.exit(1);
   }
-  if (extname(outputPath).toLowerCase() !== '.rp') throw new Error('Output path must end in .rp');
+  // .rp 与 .rplib 同容器（RP9 库带 manifest）：空白页记录对两者都成立。
+  if (!['.rp', '.rplib'].includes(extname(outputPath).toLowerCase())) throw new Error('Output path must end in .rp or .rplib');
   const input = readFileSync(resolve(inputPath));
   const result = createBlankPage(input, newName);
   writeFileSync(resolve(outputPath), result.file, { flag: 'wx' });

@@ -63,7 +63,7 @@ const COMMANDS = [
     "command": "create-blank-page",
     "script": "create-blank-page.mjs",
     "summary": "把与输入文件同版本的空白模板 Page 记录追加到已有 .rp 生成新空白页（跨版本模板会拒绝）",
-    "usage": "node create-blank-page.mjs <input.rp> <output.rp> <newPageName>",
+    "usage": "node create-blank-page.mjs <input.rp|rplib> <output.rp|rplib> <newPageName>",
     "output": "index:3",
     "evidence": "gui-roundtrip"
   },
@@ -71,7 +71,7 @@ const COMMANDS = [
     "command": "duplicate-page",
     "script": "duplicate-page.mjs",
     "summary": "按页名（或 --index 记录号）复制已有页面生成新页",
-    "usage": "node duplicate-page.mjs source.rp output.rp sourceName newName",
+    "usage": "node duplicate-page.mjs source.rp|rplib output.rp|rplib sourceName newName",
     "output": "index:3",
     "evidence": "gui-roundtrip"
   },
@@ -103,7 +103,7 @@ const COMMANDS = [
     "command": "fill-panel-state",
     "script": "fill-panel-state.mjs",
     "summary": "把一个 Page 的控件闭包导入 Page 或 Master 所属 PanelState（支持 --master、--append/--replace、嵌套面板/中继器/母版/连接线自定义锚点及闭合内部交互）",
-    "usage": "node fill-panel-state.mjs <source.rp> <target.rp> <new.rp> <sourcePage> <pageOrMaster> <panel> <state> [--master] [--append | --replace]",
+    "usage": "node fill-panel-state.mjs <source.rp|rplib|rplib> <target.rp> <new.rp|rplib> <sourcePage> <pageOrMaster> <panel> <state> [--master] [--append | --replace]",
     "output": "index:4",
     "evidence": "gui-roundtrip"
   },
@@ -111,7 +111,7 @@ const COMMANDS = [
     "command": "remove-panel-state-content",
     "script": "remove-panel-state-content.mjs",
     "summary": "按顶层元件名删除、--ids 按 ID 删除或 --all 清空一个 PanelState",
-    "usage": "node remove-panel-state-content.mjs source.rp new.rp <pageOrMaster> <panel> <state> [--master] (--all | --ids <id>... | <widgetName>...)",
+    "usage": "node remove-panel-state-content.mjs source.rp|rplib new.rp|rplib <pageOrMaster> <panel> <state> [--master] (--all | --ids <id>... | <widgetName>...)",
     "output": "index:3",
     "evidence": "gui-roundtrip"
   },
@@ -119,7 +119,7 @@ const COMMANDS = [
     "command": "set-panel-fit-to-content",
     "script": "set-panel-fit-to-content.mjs",
     "summary": "按记录/元件 ID 写 native boolean fit-to-content 开关",
-    "usage": "node set-panel-fit-to-content.mjs source.rp new.rp spec.json",
+    "usage": "node set-panel-fit-to-content.mjs source.rp|rplib new.rp|rplib spec.json",
     "output": "index:3",
     "evidence": "gui-roundtrip"
   },
@@ -135,7 +135,7 @@ const COMMANDS = [
     "command": "add-interaction",
     "script": "add-interaction.mjs",
     "summary": "向元件或页面追加事件+动作交互（支持 --replace-event、--on-page、--json 条件/多 Case；FCall 函数名按 18 项注册表白名单校验）",
-    "usage": "node add-interaction.mjs source.rp output.rp <widgetName|pageName> [--page] [--on-page <pageName>] [--replace-event] --event <EventName> --action <type> [key=value ...]",
+    "usage": "node add-interaction.mjs source.rp|rplib output.rp|rplib <widgetName|pageName> [--page] [--on-page <pageName>] [--replace-event] --event <EventName> --action <type> [key=value ...]",
     "output": "index:3",
     "evidence": "gui-roundtrip"
   },
@@ -143,7 +143,7 @@ const COMMANDS = [
     "command": "remove-interaction",
     "script": "remove-interaction.mjs",
     "summary": "按事件类型移除活动事件，或按 Case/Action 序号移除单个活动动作",
-    "usage": "node remove-interaction.mjs source.rp output.rp <widgetName|pageName> [--page] [--on-page <pageName>] --event <EventName> (--remove-event | --remove-action --case-index <n> --action-index <n>)",
+    "usage": "node remove-interaction.mjs source.rp|rplib output.rp|rplib <widgetName|pageName> [--page] [--on-page <pageName>] --event <EventName> (--remove-event | --remove-action --case-index <n> --action-index <n>)",
     "output": "index:3",
     "evidence": "gui-roundtrip"
   },
@@ -151,7 +151,7 @@ const COMMANDS = [
     "command": "add-click-link",
     "script": "add-click-link.mjs",
     "summary": "给无交互的具名元件添加点击打开链接交互（capabilities.md 未列此工具，仅结构级）",
-    "usage": "node add-click-link.mjs source.rp output.rp widgetName url [current|new]",
+    "usage": "node add-click-link.mjs source.rp|rplib output.rp|rplib widgetName url [current|new]",
     "output": "index:3",
     "evidence": "structure"
   },
@@ -162,6 +162,30 @@ const COMMANDS = [
     "usage": "node clone-library-widget.mjs <source.rplib> <target.rp> <output.rp> <sourcePage> <targetPage> <newName> [--x N --y N --w N --h N]",
     "output": "index:4",
     "evidence": "gui-roundtrip"
+  },
+  {
+    "command": "append-pages",
+    "script": "append-pages.mjs",
+    "summary": "把源 .rp 的页追加进目标（.rp 工程 或 .rplib 元件库）统一入口：目标已有页不动，只加目标里没有的页名，写完自检",
+    "usage": "node append-pages.mjs <target.rp|rplib> <source.rp> <output> [--pages a,b,c] [--fail-on-duplicate] [--as rp|rplib] [--json]",
+    "output": "index:4",
+    "evidence": "loaded"
+  },
+  {
+    "command": "remove-page",
+    "script": "remove-page.mjs",
+    "summary": "删除 .rp 工程或 .rplib 元件库里的页（含页拥有的 PanelState 包；同时清理 sitemap 与 manifest 悬空引用）",
+    "usage": "node remove-page.mjs <source.rp|rplib> <output.rp|rplib> <pageName...> [--json] [--strict]",
+    "output": "index:3",
+    "evidence": "loaded"
+  },
+  {
+    "command": "create-blank-library",
+    "script": "create-blank-library.mjs",
+    "summary": "由真实 RP9 库派生空库 .rplib（等价 create-blank-project 的库版本；基座可 --seed / AXURE_LIBRARY_SEED）",
+    "usage": "node create-blank-library.mjs <output.rplib> [--seed <library.rplib>] [--keep-pages] [--json]",
+    "output": "index:2",
+    "evidence": "loaded"
   },
   {
     "command": "append-library-pages",
@@ -191,7 +215,7 @@ const COMMANDS = [
     "command": "set-combobox-options",
     "script": "set-combobox-options.mjs",
     "summary": "设置唯一原生 ComboBox 的选项与选中项",
-    "usage": "node set-combobox-options.mjs <source.rp> <output.rp> <pageName> <widgetName> <options-json> [--selected <zeroBasedIndex>]",
+    "usage": "node set-combobox-options.mjs <source.rp|rplib|rplib> <output.rp|rplib|rplib> <pageName> <widgetName> <options-json> [--selected <zeroBasedIndex>]",
     "output": "index:3",
     "evidence": "gui-roundtrip"
   },
@@ -199,7 +223,7 @@ const COMMANDS = [
     "command": "set-listbox-options",
     "script": "set-listbox-options.mjs",
     "summary": "设置唯一原生 ListBox 的选项、多选与选中索引",
-    "usage": "node set-listbox-options.mjs <source.rp> <output.rp> <pageName> <widgetName> <options-json> [--selected <indices-json>] [--single]",
+    "usage": "node set-listbox-options.mjs <source.rp|rplib|rplib> <output.rp|rplib|rplib> <pageName> <widgetName> <options-json> [--selected <indices-json>] [--single]",
     "output": "index:3",
     "evidence": "gui-roundtrip"
   },
@@ -207,7 +231,7 @@ const COMMANDS = [
     "command": "set-native-table",
     "script": "set-native-table.mjs",
     "summary": "改写原生 Table 矩阵/行高/列宽，扩容时克隆单元格，格支持 {runs} 多 run；可选用同页 VectorShape 模板生成视觉合并覆盖块",
-    "usage": "node set-native-table.mjs input.rp output.rp table.json",
+    "usage": "node set-native-table.mjs input.rp|rplib output.rp|rplib table.json",
     "output": "index:3",
     "evidence": "gui-roundtrip"
   },
@@ -215,7 +239,7 @@ const COMMANDS = [
     "command": "clone-native-connector",
     "script": "clone-native-connector.mjs",
     "summary": "克隆原生 Connector 与端点闭包到目标页面（支持自定义锚点 GUID/坐标/方向保留及 PanelState 源图，跨 diagram 端点拒绝）",
-    "usage": "node clone-native-connector.mjs <source.rp> <target.rp> <output.rp> <sourceRecord> <connectorId> <targetPage> [options-json]",
+    "usage": "node clone-native-connector.mjs <source.rp|rplib|rplib> <target.rp> <output.rp|rplib|rplib> <sourceRecord> <connectorId> <targetPage> [options-json]",
     "output": "index:4",
     "evidence": "gui-roundtrip"
   },
@@ -223,7 +247,7 @@ const COMMANDS = [
     "command": "set-connector-anchors",
     "script": "set-connector-anchors.mjs",
     "summary": "在同一 Page 或 PanelState 记录内把连接线端点挂接到元件或脱开为自由端",
-    "usage": "node set-connector-anchors.mjs <source.rp> <output.rp> <pageName> <connector-name-or-selector-json> <endpoints-json>",
+    "usage": "node set-connector-anchors.mjs <source.rp|rplib|rplib> <output.rp|rplib|rplib> <pageName> <connector-name-or-selector-json> <endpoints-json>",
     "output": "index:3",
     "evidence": "gui-roundtrip"
   },
@@ -231,7 +255,7 @@ const COMMANDS = [
     "command": "set-widget-text",
     "script": "set-widget-text.mjs",
     "summary": "按页内名称、记录索引+对象 ID 或容器路径精确定位改写一个既有文本片段",
-    "usage": "node set-widget-text.mjs <source.rp> <output.rp> <pageName> <widgetName> <text>",
+    "usage": "node set-widget-text.mjs <source.rp|rplib|rplib> <output.rp|rplib|rplib> <pageName> <widgetName> <text>",
     "output": "index:3",
     "evidence": "gui-roundtrip"
   },
@@ -239,7 +263,7 @@ const COMMANDS = [
     "command": "set-widget-richtext",
     "script": "set-widget-richtext.mjs",
     "summary": "整段重写原生 RichTextBlock 的段落与 runs（字体/字号/行距/对齐/原生列表级别/wrapping/trimming 及 run 全量键）",
-    "usage": "node set-widget-richtext.mjs source.rp new.rp richtext.json",
+    "usage": "node set-widget-richtext.mjs source.rp|rplib new.rp|rplib richtext.json",
     "output": "index:3",
     "evidence": "gui-roundtrip"
   },
@@ -255,7 +279,7 @@ const COMMANDS = [
     "command": "name-widget",
     "script": "name-widget.mjs",
     "summary": "按旧名称快捷改名（可加页名），或按记录/对象 ID 精确改名；保留身份与交互",
-    "usage": "node name-widget.mjs <source.rp> <new.rp> --name <oldName> --to <newName> [--page <pageName>]；或 --record <record> --widget <id> --to <newName>；兼容 <pageRecordsIndex|页名> <widgetId> <newName> [...]",
+    "usage": "node name-widget.mjs <source.rp|rplib|rplib> <new.rp|rplib> --name <oldName> --to <newName> [--page <pageName>]；或 --record <record> --widget <id> --to <newName>；兼容 <pageRecordsIndex|页名> <widgetId> <newName> [...]",
     "output": "index:3",
     "evidence": "preview"
   },
@@ -263,7 +287,7 @@ const COMMANDS = [
     "command": "patch-link-window",
     "script": "patch-link-window.mjs",
     "summary": "字节级改写唯一 Page 记录里链接打开方式 current/new（capabilities.md 未列，仅结构级研究工具）",
-    "usage": "node patch-link-window.mjs <source.rp> <new.rp> <current|new>",
+    "usage": "node patch-link-window.mjs <source.rp|rplib|rplib> <new.rp|rplib> <current|new>",
     "output": "index:3",
     "evidence": "structure"
   },
@@ -271,7 +295,7 @@ const COMMANDS = [
     "command": "patch-string",
     "script": "patch-string.mjs",
     "summary": "替换唯一 Page 记录中的一个已有字符串（研究用，capabilities.md 未列）",
-    "usage": "node patch-string.mjs <source.rp> <new.rp> <old string> <new string>",
+    "usage": "node patch-string.mjs <source.rp|rplib|rplib> <new.rp|rplib> <old string> <new string>",
     "output": "index:3",
     "evidence": "structure"
   },
@@ -793,6 +817,11 @@ const LIB_SCRIPTS = [
     "script": "proto.mjs",
     "summary": "声明式直接原型生成与双通道混合编译入口（支持 --spec <spec.json> 与 --preset、Web/Mobile 多主题、设备外框自动合成、多页装配与动态面板/原生控件/跨页交互离线装填），封装 proto.py",
     "evidence": "channel-a"
+  },
+  {
+    "script": "page-ops.mjs",
+    "summary": "页级删除的共用实现（dd sitemap/manifest 清理 + 悬空 ref 剪除），供 remove-page / create-blank-library 复用",
+    "evidence": "internal"
   },
   {
     "script": "merge-pages.mjs",

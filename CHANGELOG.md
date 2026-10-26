@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **容器一致性（P0）**：记录/元件级写入与页 CRUD 统一支持 `.rp` 与 `.rplib`。
+  - 新增 `append-pages`（统一追加：目标 `.rp`/`.rplib`，同名跳过 / `--fail-on-duplicate`，写完自检）。
+  - 新增 `remove-page`（删页 + 页拥有的 PanelState 包；清理 dd sitemap 与 manifest 悬空引用，
+    真实库的文件夹树也不会再让 Axure 侧抛 `RPTreeMapNode.ChildNodes` NPE）。
+  - 新增 `create-blank-library`（由真实库派生空库，等价 `create-blank-project` 的库版本）。
+  - `rp-records` 新增 `containerKind()` / `requireWritableContainer()`：manifest（rp/RP9 库）可写、裸流只读并给出明确错误；
+    `replaceRecord` / `insertRecord` 统一守卫。
+  - 16 条元件/记录级命令的 usage 声明 `.rp|rplib`；`create-blank-page` 允许 `.rplib` 输出；
+    `set-master-overrides` 等工程专属命令保持 `.rp`。
+  - 新增 `test/library-parity-check.mjs`（`npm run test:parity`；真实库检查由 `AXURE_LIBRARY_SEED` 开启）。
 本项目源自 [zee-rp](https://github.com/LilZeeCN/zee-rp)（MIT，见 LICENSE），在此基础上包含以下改动：
 
 - **新增 `append-library-pages`**：把 `.rp` 的页增量追加进 `.rplib` 控件库（RP9 库与 .rp 同容器）。

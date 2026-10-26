@@ -38,8 +38,12 @@ function requireLibraryBase(buf, label) {
   if (!records.some(r => r.className === 'Axure:DesignDocument')) {
     throw new Error(`${label} 缺少 Axure:DesignDocument 记录，不是可用的 Axure 工程/库`);
   }
+  // 追加依赖 dd 里的一页作为 sitemap 脚手架：0 页库（create-blank-library 的 --empty）不能直接作为基座。
   const names = pageNames(buf);
-  if (!names.length) throw new Error(`${label} 里没有任何页（Axure:Page + PackageInfo），无法当作库基座`);
+  if (!names.length) {
+    throw new Error(`${label} 里没有任何页：追加需要一页作为 sitemap 脚手架；`
+      + '先用 create-blank-page 加一页，或使用带页的基座（create-blank-library 默认保留一页）。');
+  }
   return names;
 }
 

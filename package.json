@@ -15,7 +15,7 @@
   "scripts": {
     "test": "node test/regression.mjs",
     "test:native": "node test/native-check.mjs",
-    "test:parity": "node test/parity-check.mjs",
+    "test:parity": "node test/library-parity-check.mjs",
     "test:mcp": "node test/mcp-check.mjs",
     "test:historical": "node test/research-regression.mjs",
     "test:historical-mcp": "node test/research-mcp-check.mjs",

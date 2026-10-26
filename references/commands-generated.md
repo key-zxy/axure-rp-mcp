@@ -23,6 +23,9 @@ Generated from the shipped registry. Evidence tags refer to bounded samples, not
 | add-click-link | add-click-link.mjs | 给无交互的具名元件添加点击打开链接交互（capabilities.md 未列此工具，仅结构级） | structure |
 | clone-library-widget | clone-library-widget.mjs | 从 .rplib 克隆单个原生控件到目标 .rp 页面 | gui-roundtrip |
 | clone-library-page-content | clone-library-page-content.mjs | 把 .rplib 库页的全部内容闭包导入目标 .rp 页面 | gui-roundtrip |
+| append-pages | append-pages.mjs | 把源 .rp 的页追加进目标（.rp 工程或 .rplib 库）统一入口：目标已有页不动，只加缺的页名，写完自检 | loaded |
+| remove-page | remove-page.mjs | 删除 .rp/.rplib 里的页（含其 PanelState 包，清理 sitemap/manifest 悬空引用） | loaded |
+| create-blank-library | create-blank-library.mjs | 由真实 RP9 库派生空库（等价 create-blank-project 的库版本） | loaded |
 | append-library-pages | append-library-pages.mjs | 把 .rp 的页增量追加进 .rplib 控件库（既有库页字节不动，默认只追加库里没有的页名） | loaded |
 | hide-widgets | hide-widgets.mjs | 按清单把元件设为隐藏（原生 MyStyle VISIBLE 属性 = false） | structure |
 | set-combobox-options | set-combobox-options.mjs | 设置唯一原生 ComboBox 的选项与选中项 | gui-roundtrip |
